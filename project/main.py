@@ -15,7 +15,7 @@ def index():
 @login_required
 def profile():
     # Define the endpoint URL
-    url = 'http://127.0.0.1:5000/profile'
+    url = 'http://127.0.0.1:8081/profile'
 
     print("\n\n ta aqui o user? ", current_user.name, " e tambem ", current_user.email, "\n\n")
 

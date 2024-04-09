@@ -14,6 +14,7 @@ authlib
 pyOpenSSL==19.0.0
 flask-login
 flask-migrate
+bulma
 # verificar que FLASK_APP == project 
 # export FLASK_APP=project
 # export FLASK_DEBUG=1
