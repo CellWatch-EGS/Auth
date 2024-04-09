@@ -23,7 +23,8 @@ oauth = OAuth()
 
 google = oauth.register(
     'google',
-    
+    client_id=os.getenv('CLIENT_ID'),
+    client_secret=os.getenv('CLIENT_SECRET'),
     authorize_url='https://accounts.google.com/o/oauth2/auth',
     access_token_url='https://accounts.google.com/o/oauth2/token',
     jwks_uri=os.getenv('JWKS_URI'),
