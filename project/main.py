@@ -14,15 +14,14 @@ def index():
 @main.route('/profile')
 @login_required
 def profile():
-    # Define the endpoint URL
-    url = 'http://127.0.0.1:8081/profile'
-
+    
     print("\n\n ta aqui o user? ", current_user.name, " e tambem ", current_user.email, "\n\n")
 
     access_token = request.cookies.get('access_token')
 
     # Send a GET request without including an access token
-    response = requests.get(url)
+
+
     # if current_user.is_authenticated:
     #     return f'Hello, {current_user.email}!'
     # else:

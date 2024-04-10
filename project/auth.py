@@ -1,7 +1,7 @@
 # auth.py
 
 from flask_jwt_extended import create_access_token, create_refresh_token, jwt_required, get_jwt_identity
-from flask import Blueprint, jsonify, render_template, redirect, url_for, request, flash, session, abort
+from flask import Blueprint, jsonify, render_template, redirect, url_for, request, flash, session, abort, make_response
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, logout_user, login_required, current_user, LoginManager 
 from .models import User
@@ -134,7 +134,7 @@ def login_post():
 
     db.session.commit()
     # return {'access_token': access_token}, 200
-    return redirect(url_for('main.profile'))
+    return redirect(url_for('main.profile')), {'access_token': access_token}, 200
 
 
 @auth.route('/signup')
@@ -172,8 +172,8 @@ def logout():
     return redirect(url_for('main.index'))
 
 
-@auth.route('/getinfo')
-@jwt_required()
+@auth.route('/userinfo')
+@jwt_required()  
 def get_token():
     # current_user = get_jwt_identity()
     current_user_id = get_jwt_identity()

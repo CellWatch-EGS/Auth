@@ -22,7 +22,7 @@ def create_app():
     app.config['SECRET_KEY'] = "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"
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
     # prevenir ataque javascript
-    # app.config['SESSION_COOKIE_HTTPONLY'] = True
+    app.config['SESSION_COOKIE_HTTPONLY'] = True
     # Configure token expiration settings, more secure
     app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=1)  # Access token expiration time (1 hour)
     app.config['JWT_REFRESH_TOKEN_EXPIRES'] = timedelta(days=30)  # Refresh token expiration time (30 days)
