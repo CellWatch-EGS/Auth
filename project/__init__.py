@@ -11,16 +11,17 @@ from authlib.integrations.flask_client import OAuth
 from .auth import oauth
 from .extensions import db
 
-# from .main import main
-
-# init SQLAlchemy so we can use it later in our models
-# db = SQLAlchemy()
 
 def create_app():
+
     app = Flask(__name__)
     
     app.config['SECRET_KEY'] = "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"
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
+    # app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
+
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://admin:admin@localhost/cellwatch'
+    # app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
+
     # prevenir ataque javascript
     app.config['SESSION_COOKIE_HTTPONLY'] = True
     # Configure token expiration settings, more secure
@@ -35,10 +36,10 @@ def create_app():
     login_manager.login_view = 'auth.login'
     login_manager.init_app(app)
 
-    from .models import User
 
     @login_manager.user_loader
     def load_user(user_id):
+        from .models import User
         if user_id is not None and user_id != 'None':
             return User.query.get((user_id))
         return None

@@ -14,6 +14,11 @@ authlib
 pyOpenSSL==19.0.0
 flask-login
 flask-migrate
+psycopg2-binary
+bulma
+python-dotenv
 # verificar que FLASK_APP == project 
 # export FLASK_APP=project
 # export FLASK_DEBUG=1
+
+#psql -h localhost -U admin -d cellwatch

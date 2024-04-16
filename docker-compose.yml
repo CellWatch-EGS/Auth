@@ -1,0 +1,38 @@
+version: '3'
+services:
+  api:
+    # dockerfile no diretorio atual
+    build: .
+    # esperar que a db comece, ta a dar problemas n ter isto
+    command:
+      [
+        "./wait-for-it.sh",
+        "db:5432",
+        "--",
+        "python",
+        "run.py"
+      ]
+    # correspondencia entre porta do host e do container
+    ports:
+      - "8080:8080"
+    # esperar que o servico db comece, diferente de esperar que ele esteja pronto
+    depends_on:
+      - db
+
+    # definir variaveis para usar no __init__.py
+    environment:
+      - DATABASE_URL=postgresql://admin:admin@db:5432/cellwatch
+  db:
+    ports:
+      - "8001:5432"
+    # em vez de build usa a imagem do dockerhub
+    image: postgres:13.2-alpine
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: cellwatch
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata: {}

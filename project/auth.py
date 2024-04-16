@@ -120,6 +120,7 @@ def login_post():
         return redirect(url_for('auth.login')) # if user doesn't exist or password is wrong, reload the page
 
     # if the above check passes, then we know the user has the right credentials
+
     login_user(user, remember=remember)
     #obtain user_id from user object
     user_id = user.id
@@ -134,7 +135,7 @@ def login_post():
 
     db.session.commit()
     # return {'access_token': access_token}, 200
-    return redirect(url_for('main.profile')), {'access_token': access_token}, 200
+    return redirect(url_for('main.profile'))
 
 
 @auth.route('/signup')
