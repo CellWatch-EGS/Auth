@@ -17,13 +17,18 @@
 sudo su - postgres
 psql
 ```
-## crear user
+## criar base de dados
+```sql
+CREATE DATABASE cellwatch;
+```
+
+## criar user
 
 ``` sql
 CREATE USER admin WITH PASSWORD 'admin';
 ```
 
-## dar permicoes
+## dar permições
 
 ``` sql
 GRANT ALL PRIVILEGES ON DATABASE cellwatch TO admin;
