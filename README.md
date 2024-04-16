@@ -1,34 +1,34 @@
 # Auth
 
-# iniciar virtual env
+## iniciar virtual env
 ```source venv2/bin/activate```
 
-# instalar requirements
+## instalar requirements
 ``` pip install -r requirements.txt```
 
-# iniciar 
+## iniciar 
 ```python3 run.py```
 
 
-# se for a primeira vez
-## iniciar postgres
+## se for a primeira vez
+### iniciar postgres
 
 ```bash
 sudo su - postgres
 psql
 ```
-## criar base de dados
+### criar base de dados
 ```sql
 CREATE DATABASE cellwatch;
 ```
 
-## criar user
+### criar user
 
 ``` sql
 CREATE USER admin WITH PASSWORD 'admin';
 ```
 
-## dar permições
+### dar permições
 
 ``` sql
 GRANT ALL PRIVILEGES ON DATABASE cellwatch TO admin;
