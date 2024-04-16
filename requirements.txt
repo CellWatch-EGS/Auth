@@ -15,6 +15,7 @@ pyOpenSSL==19.0.0
 flask-login
 flask-migrate
 psycopg2-binary
+postgres
 bulma
 python-dotenv
 # verificar que FLASK_APP == project 
