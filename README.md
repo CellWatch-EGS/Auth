@@ -1,5 +1,11 @@
 # Auth
 
+# com docker
+```bash
+docker compose up
+```
+
+
 ## iniciar virtual env
 ```source venv2/bin/activate```
 

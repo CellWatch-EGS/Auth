@@ -22,6 +22,8 @@ services:
     # definir variaveis para usar no __init__.py
     environment:
       - DATABASE_URL=postgresql://admin:admin@db:5432/cellwatch
+    networks:
+      - cellwatch_network
   db:
     ports:
       - "8001:5432"
@@ -33,6 +35,12 @@ services:
       POSTGRES_DB: cellwatch
     volumes:
       - pgdata:/var/lib/postgresql/data
+    networks:
+      - cellwatch_network
 
 volumes:
   pgdata: {}
+
+networks:
+  cellwatch_network:
+    driver: bridge

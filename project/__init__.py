@@ -19,8 +19,8 @@ def create_app():
     app.config['SECRET_KEY'] = "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"
     # app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
 
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://admin:admin@localhost/cellwatch'
-    # app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
+    # app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://admin:admin@localhost/cellwatch'
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
 
     # prevenir ataque javascript
     app.config['SESSION_COOKIE_HTTPONLY'] = True

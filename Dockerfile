@@ -19,7 +19,7 @@ RUN pip install -r requirements.txt
 # RUN pip install python-dotenv
 
 # Make port 8080 available to the world outside this container
-EXPOSE 8080
+EXPOSE 8080/tcp
 
 # Run the Flask application
 CMD ["python3", "run.py"]
