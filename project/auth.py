@@ -15,6 +15,7 @@ from authlib.integrations.flask_client import OAuth
 from functools import wraps
 from flask import url_for
 from dotenv import load_dotenv
+import requests
 load_dotenv()
 import os
 auth = Blueprint('auth', __name__)
@@ -135,7 +136,15 @@ def login_post():
 
     db.session.commit()
     # return {'access_token': access_token}, 200
-    return redirect(url_for('main.profile'))
+    # return redirect(url_for('main.profile'))
+    BASE_URL = "http://127.0.0.1:5000/v1/calendar/{user_id}"
+    url = BASE_URL.format(user_id=user_id)  
+    headers = {
+        "Authorization": "Bearer " + access_token
+    }
+
+    response = requests.get(url, headers=headers)
+    return jsonify(response.json())
 
 
 @auth.route('/signup')

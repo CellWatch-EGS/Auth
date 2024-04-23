@@ -2,7 +2,7 @@ version: '3'
 services:
   api:
     # dockerfile no diretorio atual
-    build: .
+    image: registry.deti/cellwatch/auth_app:v1
     # esperar que a db comece, ta a dar problemas n ter isto
     command:
       [
@@ -44,3 +44,5 @@ volumes:
 networks:
   cellwatch_network:
     driver: bridge
+
+# usar nome do container em vez do ip, docker vai buscar o ip certo
