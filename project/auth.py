@@ -137,14 +137,11 @@ def login_post():
     db.session.commit()
     # return {'access_token': access_token}, 200
     # return redirect(url_for('main.profile'))
-    BASE_URL = "http://127.0.0.1:5000/v1/calendar/{user_id}"
-    url = BASE_URL.format(user_id=user_id)  
-    headers = {
-        "Authorization": "Bearer " + access_token
-    }
-
-    response = requests.get(url, headers=headers)
-    return jsonify(response.json())
+    from flask import make_response
+    BASE_URL = f"http://127.0.0.1:5000/v1/calendar/{user_id}"
+    response = make_response(redirect(BASE_URL))
+    response.set_cookie('access_token', access_token)
+    return response
 
 
 @auth.route('/signup')

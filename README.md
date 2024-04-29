@@ -42,3 +42,9 @@ GRANT ALL PRIVILEGES ON DATABASE cellwatch TO admin;
 
 
 
+```bash
+docker build -t registry.deti/cellwatch/auth_app:v1 . 
+docker push registry.deti/cellwatch/auth_app:v1
+docker run -p 8080:8080 registry.deti:/cellwatch:v1
+```
+
