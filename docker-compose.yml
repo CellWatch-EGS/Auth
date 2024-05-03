@@ -18,10 +18,9 @@ services:
     # esperar que o servico db comece, diferente de esperar que ele esteja pronto
     depends_on:
       - db
-
     # definir variaveis para usar no __init__.py
     environment:
-      - DATABASE_URL=postgresql://admin:admin@db:5432/cellwatch
+      - DATABASE_URI=postgresql://admin:admin@db:5432/cellwatch
     networks:
       - cellwatch_network
   db:
