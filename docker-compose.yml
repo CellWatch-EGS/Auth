@@ -2,7 +2,7 @@ version: '3'
 services:
   api:
     # dockerfile no diretorio atual
-    image: registry.deti/cellwatch/auth_app:v1
+    image: registry.deti/cellwatch/auth_app:v2
     # esperar que a db comece, ta a dar problemas n ter isto
     command:
       [
