@@ -138,7 +138,8 @@ def login_post():
     # return {'access_token': access_token}, 200
     # return redirect(url_for('main.profile'))
     from flask import make_response
-    BASE_URL = f"http://127.0.0.1:5000/v1/calendar/{user_id}"
+    auth_url = os.getenv("AUTH_HOST")
+    BASE_URL = f"http://{auth_url}/v1/calendar/{user_id}"
     response = make_response(redirect(BASE_URL))
     response.set_cookie('access_token', access_token)
     return response

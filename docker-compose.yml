@@ -21,6 +21,7 @@ services:
     # definir variaveis para usar no __init__.py
     environment:
       - DATABASE_URI=postgresql://admin:admin@db:5432/cellwatch
+      - AUTH_HOST=127.0.0.1:5000
     networks:
       - cellwatch_network
   db:
