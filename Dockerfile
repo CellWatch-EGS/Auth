@@ -10,9 +10,9 @@ WORKDIR /app
 COPY . /app
 
 # esperar pelo container a correr
-COPY wait-for-it.sh /wait-for-it.sh
+# COPY wait-for-it.sh /wait-for-it.sh
 
-RUN chmod +x /wait-for-it.sh
+# RUN chmod +x /wait-for-it.sh
 
 # Install any needed dependencies specified in requirements.txt
 RUN pip install -r requirements.txt

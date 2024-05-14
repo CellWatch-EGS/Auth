@@ -2,8 +2,8 @@
 
 ## Com docker
 ```bash
-docker build -t registry.deti/cellwatch/auth_app:v1 .
-docker push registry.deti/cellwatch/auth_app:v1
+docker build -t registry.deti/cellwatch/auth_app:v2 .
+docker push registry.deti/cellwatch/auth_app:v2
 docker compose up
 ```
 

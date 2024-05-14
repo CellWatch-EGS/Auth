@@ -27,7 +27,7 @@ def create_app():
     # Configure token expiration settings, more secure
     app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=1)  # Access token expiration time (1 hour)
     app.config['JWT_REFRESH_TOKEN_EXPIRES'] = timedelta(days=30)  # Refresh token expiration time (30 days)
-
+    print(app.config)
     jwt = JWTManager(app)
 
     db.init_app(app)
