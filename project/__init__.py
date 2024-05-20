@@ -16,17 +16,26 @@ def create_app():
 
     app = Flask(__name__)
     
+
+    app.config['JWT_TOKEN_LOCATION'] = ['cookies']
+
     app.config['SECRET_KEY'] = "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"
     # app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
     app.config['JWT_TOKEN_LOCATION'] = ['headers']
-    # app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://admin:admin@localhost/cellwatch'
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URI')
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://admin:admin@localhost/cellwatch'
+    # app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URI')
 
     # prevenir ataque javascript
     app.config['SESSION_COOKIE_HTTPONLY'] = True
-    # Configure token expiration settings, more secure
-    app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=1)  # Access token expiration time (1 hour)
-    app.config['JWT_REFRESH_TOKEN_EXPIRES'] = timedelta(days=30)  # Refresh token expiration time (30 days)
+
+    app.config['JWT_CSRF_CHECK_FORM'] = False
+    app.config['JWT_CSRF_METHODS'] = []
+
+    app.config['JWT_CSRF_IN_COOKIES'] = True
+    app.config['JWT_ACCESS_CSRF_COOKIE_NAME'] = 'csrf_access_token'
+
+    app.config['JWT_ACCESS_CSRF_HEADER_NAME'] = 'X-CSRF-TOKEN-ACCESS'
+
     print(app.config)
     jwt = JWTManager(app)
 

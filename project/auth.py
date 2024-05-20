@@ -1,7 +1,9 @@
 # auth.py
 
+import json
 from flask_jwt_extended import create_access_token, create_refresh_token, jwt_required, get_jwt_identity
 from flask import Blueprint, jsonify, render_template, redirect, url_for, request, flash, session, abort, make_response
+import jwt
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, logout_user, login_required, current_user, LoginManager 
 from .models import User
@@ -15,6 +17,8 @@ from authlib.integrations.flask_client import OAuth
 from functools import wraps
 from flask import url_for
 from dotenv import load_dotenv
+from flask_jwt_extended.utils import get_csrf_token
+
 import requests
 load_dotenv()
 import os
@@ -85,9 +89,9 @@ def google_callback():
     return redirect(url_for('main.profile'))
 
 
-@auth.route('/login')
-def login():
-    return render_template('login.html')
+# @auth.route('/login')
+# def login():
+#     return render_template('login.html')
 
 
 @auth.route('/login/google')
@@ -105,7 +109,7 @@ def login_google():
         nonce=nonce
     )
 
-@auth.route('/login', methods=['POST'])
+@auth.route('/login', methods=['POST', 'GET'])
 def login_post():
     email = request.form.get('email')
     password = request.form.get('password')
@@ -126,7 +130,7 @@ def login_post():
     #obtain user_id from user object
     user_id = user.id
     access_token = create_access_token(identity=user_id)
-    refresh_token = create_refresh_token(identity=user.id)
+    refresh_token = create_refresh_token(identity=user_id)
     print("token ",access_token)
     print("refresh ",refresh_token)
 
@@ -134,16 +138,44 @@ def login_post():
     session['access_token'] = access_token  # If using Flask session
     session['refresh_token'] = refresh_token  # If using Flask session
 
+    # Tente decodificar o token usando app.secret_key
+    decoded_token = jwt.decode(access_token,)
+    print("Decoded Token:", decoded_token)
+    
     db.session.commit()
-    # return {'access_token': access_token}, 200
     # return redirect(url_for('main.profile'))
-    from flask import make_response
-    auth_url = os.environ.get("AUTH_HOST")
+
+    # return {'access_token': access_token}, 200
+    # auth_url = "127.0.0.1:5000"
+    # BASE_URL = f"http://{auth_url}/v1/calendar/{user_id}"
+    # return redirect(BASE_URL)
+    
+    # from flask import make_response
+    # auth_url = os.environ.get("AUTH_HOST")
+
+    auth_url = "127.0.0.1:5001" # temos q estar todos no mesmo dominio
     BASE_URL = f"http://{auth_url}/v1/calendar/{user_id}"
+    print("user :   ", user_id)
+    user_data = {
+        'email': user.email,
+        'username': user.name,
+        'access_token': access_token
+    }
+
     response = make_response(redirect(BASE_URL))
-    response.set_cookie('access_token', access_token)
+    # response.set_cookie('access_token', access_token)
+    response.set_cookie('user_data', json.dumps(user_data))
+
     return response
 
+    # return jsonify({'access_token': access_token})
+
+     # Redirect to another endpoint after successful login
+    # next_url = request.args.get('next') or url_for(BASE_URL)
+    # response = redirect(BASE_URL)
+    # response.set_cookie('access_token', access_token)  # Set JWT token as a cookie
+
+    # return response
 
 @auth.route('/signup')
 def signup():
