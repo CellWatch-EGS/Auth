@@ -18,6 +18,7 @@ psycopg2-binary
 postgres
 bulma
 python-dotenv
+flask_wtf
 # verificar que FLASK_APP == project 
 # export FLASK_APP=project
 # export FLASK_DEBUG=1

@@ -138,9 +138,9 @@ def login_post():
     session['access_token'] = access_token  # If using Flask session
     session['refresh_token'] = refresh_token  # If using Flask session
 
-    # Tente decodificar o token usando app.secret_key
-    decoded_token = jwt.decode(access_token,)
-    print("Decoded Token:", decoded_token)
+    # # Tente decodificar o token usando app.secret_key
+    # decoded_token = jwt.decode(access_token,)
+    # print("Decoded Token:", decoded_token)
     
     db.session.commit()
     # return redirect(url_for('main.profile'))
@@ -165,7 +165,6 @@ def login_post():
     response = make_response(redirect(BASE_URL))
     # response.set_cookie('access_token', access_token)
     response.set_cookie('user_data', json.dumps(user_data))
-
     return response
 
     # return jsonify({'access_token': access_token})
