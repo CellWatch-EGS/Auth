@@ -1,0 +1,13 @@
+# Start from the PostgreSQL 13.2 Alpine image
+FROM postgres:13.2-alpine
+
+# Set environment variables (these can be overridden by docker-compose)
+# ENV POSTGRES_USER=admin
+# ENV POSTGRES_PASSWORD=admin
+# ENV POSTGRES_DB=cellwatch
+
+# Copy any custom configuration or initialization scripts
+# COPY ./my-config.conf /etc/postgresql
+# COPY ./my-init-script.sh /docker-entrypoint-initdb.d/
+
+# No need to define an ENTRYPOINT or CMD, as these are defined in the base image

@@ -33,7 +33,7 @@ google = oauth.register(
     authorize_url='https://accounts.google.com/o/oauth2/auth',
     access_token_url='https://accounts.google.com/o/oauth2/token',
     jwks_uri=os.getenv('JWKS_URI'),
-    redirect_uri='http://127.0.0.1:5000/google/callback',
+    redirect_uri='http://egs-cellwatch.com/authentication/google/callback',
     client_kwargs={'scope': 'openid profile email'}
 )
 
@@ -48,7 +48,7 @@ def validate_state(f):
     return decorated_function
 
 
-@auth.route('/google/callback')
+@auth.route('/authentication/google/callback')
 def google_callback():
 
     # Validate state parameter to prevent CSRF attacks
@@ -94,7 +94,7 @@ def google_callback():
 #     return render_template('login.html')
 
 
-@auth.route('/login/google')
+@auth.route('/authentication/login/google')
 def login_google():
     # Generate a random state and nonce parameters and store them in the session
     state = secrets.token_urlsafe(16)
@@ -104,12 +104,12 @@ def login_google():
 
     # Initiate OAuth flow and redirect user to Google authentication page
     return google.authorize_redirect(
-        redirect_uri=url_for('auth.google_callback', _external=True),
+        redirect_uri='http://egs-cellwatch.com/authentication/google/callback',
         state=state,
         nonce=nonce
     )
 
-@auth.route('/login', methods=['POST', 'GET'])
+@auth.route('/authentication/login', methods=['POST', 'GET'])
 def login_post():
     email = request.form.get('email')
     password = request.form.get('password')
@@ -176,13 +176,13 @@ def login_post():
 
     # return response
 
-@auth.route('/signup')
+@auth.route('/authentication/signup')
 def signup():
     return render_template('signup.html')
 
 
 # email = request.form.get('email')
-@auth.route('/signup', methods=['POST'])
+@auth.route('/authentication/signup', methods=['POST'])
 def signup_post():
     email = request.form.get('email')
     name = request.form.get('name')
@@ -204,14 +204,14 @@ def signup_post():
     return redirect(url_for('auth.login'))
 
 
-@auth.route('/logout')
+@auth.route('/authentication/logout')
 @login_required
 def logout():
     logout_user()
     return redirect(url_for('main.index'))
 
 
-@auth.route('/userinfo')
+@auth.route('/authentication/userinfo')
 @jwt_required()  
 def get_token():
     # current_user = get_jwt_identity()
@@ -229,7 +229,7 @@ def get_token():
         return jsonify({'error': 'User not found'}), 404
 
 
-@auth.route('/refresh', methods=['POST'])
+@auth.route('/authentication/refresh', methods=['POST'])
 @jwt_required(refresh=True) # Ensure that the request includes a refresh token
 def refresh_token():
     current_user_id = get_jwt_identity()  # Get the user ID from the current token

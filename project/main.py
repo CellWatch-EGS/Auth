@@ -7,11 +7,11 @@ import requests
 
 main = Blueprint('main', __name__)
 
-@main.route('/')
+@main.route('/authentication')
 def index():
     return render_template('login.html')
 
-@main.route('/profile')
+@main.route('/authentication/profile')
 @login_required
 def profile():
     

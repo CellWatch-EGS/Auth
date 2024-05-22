@@ -1,0 +1,199 @@
+# Create app deployment for auth service
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: authentication-service
+  namespace: egs-cellwatch
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: authentication-service
+  template:
+    metadata:
+      labels:
+        app: authentication-service
+    spec:
+      containers:
+      - name: authentication-service
+        image: registry.deti/egs-cellwatch/authentication-service:v9
+        env:
+        - name: DATABASE_URI
+          valueFrom:
+            secretKeyRef:
+              name: db-uri-secret
+              key: sqlalchemy_database_uri
+        resources:
+          requests:
+            memory: "32Mi"
+            cpu: "10m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 8080
+
+#Create nginx deployment
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+  namespace: egs-cellwatch
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+        - image: registry.deti/egs-cellwatch/nginx:v2
+          name: nginx
+          ports:
+            - containerPort: 80
+          resources: {}
+      restartPolicy: Always
+
+# Create db deployment 
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-db
+  namespace: egs-cellwatch
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: auth-db
+  template:
+    metadata:
+      labels:
+        app: auth-db
+    spec:
+      containers:
+      - name: auth-db
+        image: postgres:13.2-alpine
+        env:
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: db-uri-secret  # replace with the name of your Secret
+              key: POSTGRES_PASSWORD  # replace with the key in your Secret
+          
+        volumeMounts:
+        - name: init-script
+          mountPath: /docker-entrypoint-initdb.d
+        resources:
+          requests:
+            memory: "512Mi"   
+            cpu: "250m"       
+          limits:
+            memory: "1Gi"     
+            cpu: "500m"       
+        ports:
+        - containerPort: 5432
+      volumes:
+      - name: init-script
+        configMap:
+          name: postgres-init-script
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: auth-db
+  namespace: egs-cellwatch
+spec:
+  selector:
+    app: auth-db
+  ports:
+    - protocol: TCP
+      port: 5432
+      targetPort: 5432
+    
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: db-uri-secret
+  namespace: egs-cellwatch
+type: Opaque
+data:
+  sqlalchemy_database_uri: cG9zdGdyZXNxbDovL2FkbWluOmFkbWluQGF1dGgtZGIvY2VsbHdhdGNo
+  POSTGRES_PASSWORD: YWRtaW4=
+# Create Service for auth_app
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: authentication-service
+  namespace: egs-cellwatch
+spec:
+  ports:
+  - port: 8080
+    targetPort: 8080
+  selector:
+    app: authentication-service
+
+# Create Service for nginx
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service
+  namespace: egs-cellwatch
+spec:
+  ports:
+  - port: 80
+    targetPort: 80
+  selector:
+    app: nginx
+
+# Configure Traefik
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: cellwatch-egs
+  namespace: egs-cellwatch
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    traefik.ingress.kubernetes.io/frontend-entry-points: http,https
+    traefik.ingress.kubernetes.io/redirect-entry-point: https
+    traefik.ingress.kubernetes.io/redirect-permanentyy: "true"
+spec:
+  rules:
+  - host: egs-cellwatch.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: nginx-service
+            port: 
+              number: 80
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-init-script
+  namespace: egs-cellwatch
+data:
+  init.sql: |
+    CREATE DATABASE cellwatch;
+
+    CREATE USER admin WITH PASSWORD 'admin';
+
+    GRANT ALL PRIVILEGES ON DATABASE cellwatch TO admin;
+
+
+
+
