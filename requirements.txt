@@ -19,6 +19,7 @@ postgres
 bulma
 python-dotenv
 flask_wtf
+flask-restx
 # verificar que FLASK_APP == project 
 # export FLASK_APP=project
 # export FLASK_DEBUG=1

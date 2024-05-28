@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: authentication-service
-        image: registry.deti/egs-cellwatch/authentication-service:v9
+        image: registry.deti/egs-cellwatch/authentication-service:v10
         env:
         - name: DATABASE_URI
           valueFrom:

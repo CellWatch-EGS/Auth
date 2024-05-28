@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: authentication-service
-        image: registry.deti/egs-cellwatch/auth_app:v3
+        image: cellwatch.deti/egs-cellwatch/auth_app:v3
         resources:
           requests:
             memory: "32Mi"

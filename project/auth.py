@@ -33,7 +33,7 @@ google = oauth.register(
     authorize_url='https://accounts.google.com/o/oauth2/auth',
     access_token_url='https://accounts.google.com/o/oauth2/token',
     jwks_uri=os.getenv('JWKS_URI'),
-    redirect_uri='http://egs-cellwatch.com/authentication/google/callback',
+    redirect_uri='http://grupo8-egs-deti.ua.pt/authentication/google/callback',
     client_kwargs={'scope': 'openid profile email'}
 )
 
@@ -104,7 +104,7 @@ def login_google():
 
     # Initiate OAuth flow and redirect user to Google authentication page
     return google.authorize_redirect(
-        redirect_uri='http://egs-cellwatch.com/authentication/google/callback',
+        redirect_uri='http:/grupo8-egs-deti.ua.pt/authentication/google/callback',
         state=state,
         nonce=nonce
     )
@@ -153,7 +153,7 @@ def login_post():
     # from flask import make_response
     # auth_url = os.environ.get("AUTH_HOST")
 
-    auth_url = "127.0.0.1:5001" # temos q estar todos no mesmo dominio
+    auth_url = "grupo8-egs-deti.ua.pt/calendar" # temos q estar todos no mesmo dominio
     BASE_URL = f"http://{auth_url}/v1/calendar/{user_id}"
     print("user :   ", user_id)
     user_data = {

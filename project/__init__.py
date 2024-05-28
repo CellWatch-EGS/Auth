@@ -10,12 +10,13 @@ from authlib.integrations.flask_client import OAuth
 from authlib.integrations.flask_client import OAuth
 from .auth import oauth
 from .extensions import db
+from flask_restx import Api, Resource
 
 
 def create_app():
 
     app = Flask(__name__)
-    
+    api = Api(app, version='1.0', title='My API', description='A simple API')
 
     app.config['JWT_TOKEN_LOCATION'] = ['cookies']
 
