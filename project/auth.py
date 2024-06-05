@@ -53,7 +53,6 @@ def google_callback():
 
     # Validate state parameter to prevent CSRF attacks
     if request.args.get('state') != session.get('oauth_state'):
-        print("\n\n e isto que esta a mandar tudo com o crkl?? \n\n")
         abort(403)  # Return a forbidden response if state parameters do not match
 
     token = google.authorize_access_token()
@@ -61,8 +60,6 @@ def google_callback():
     user_info = google.parse_id_token(token, nonce)
 
     user_info = google.get('https://www.googleapis.com/oauth2/v2/userinfo').json()
-
-    print("o q a google retorna?", user_info)
 
     user = User.query.filter_by(email=user_info['email']).first()
 
@@ -80,7 +77,6 @@ def google_callback():
     print("token ",access_token)
     print("refresh ",refresh_token)
 
-
     db.session.add(user)
     db.session.commit()
 
@@ -89,9 +85,9 @@ def google_callback():
     return redirect(url_for('main.profile'))
 
 
-# @auth.route('/login')
-# def login():
-#     return render_template('login.html')
+@auth.route('/authentication/login')
+def login():
+    return render_template('login.html')
 
 
 @auth.route('/authentication/login/google')
@@ -104,7 +100,7 @@ def login_google():
 
     # Initiate OAuth flow and redirect user to Google authentication page
     return google.authorize_redirect(
-        redirect_uri='http:/grupo8-egs-deti.ua.pt/authentication/google/callback',
+        redirect_uri='http://grupo8-egs-deti.ua.pt/authentication/google/callback',
         state=state,
         nonce=nonce
     )
@@ -138,22 +134,9 @@ def login_post():
     session['access_token'] = access_token  # If using Flask session
     session['refresh_token'] = refresh_token  # If using Flask session
 
-    # # Tente decodificar o token usando app.secret_key
-    # decoded_token = jwt.decode(access_token,)
-    # print("Decoded Token:", decoded_token)
-    
     db.session.commit()
-    # return redirect(url_for('main.profile'))
-
-    # return {'access_token': access_token}, 200
-    # auth_url = "127.0.0.1:5000"
-    # BASE_URL = f"http://{auth_url}/v1/calendar/{user_id}"
-    # return redirect(BASE_URL)
     
-    # from flask import make_response
-    # auth_url = os.environ.get("AUTH_HOST")
-
-    auth_url = "grupo8-egs-deti.ua.pt/calendar" # temos q estar todos no mesmo dominio
+    auth_url = "grupo8-egs-deti.ua.pt/composer" # temos q estar todos no mesmo dominio
     BASE_URL = f"http://{auth_url}/v1/calendar/{user_id}"
     print("user :   ", user_id)
     user_data = {
@@ -167,21 +150,12 @@ def login_post():
     response.set_cookie('user_data', json.dumps(user_data))
     return response
 
-    # return jsonify({'access_token': access_token})
-
-     # Redirect to another endpoint after successful login
-    # next_url = request.args.get('next') or url_for(BASE_URL)
-    # response = redirect(BASE_URL)
-    # response.set_cookie('access_token', access_token)  # Set JWT token as a cookie
-
-    # return response
 
 @auth.route('/authentication/signup')
 def signup():
     return render_template('signup.html')
 
 
-# email = request.form.get('email')
 @auth.route('/authentication/signup', methods=['POST'])
 def signup_post():
     email = request.form.get('email')
@@ -212,7 +186,6 @@ def logout():
 
 
 @auth.route('/authentication/userinfo')
-@jwt_required()  
 def get_token():
     # current_user = get_jwt_identity()
     current_user_id = get_jwt_identity()
@@ -230,7 +203,6 @@ def get_token():
 
 
 @auth.route('/authentication/refresh', methods=['POST'])
-@jwt_required(refresh=True) # Ensure that the request includes a refresh token
 def refresh_token():
     current_user_id = get_jwt_identity()  # Get the user ID from the current token
     user = User.query.get(current_user_id)  # Fetch the user object
@@ -245,4 +217,3 @@ def refresh_token():
     session['access_token']=new_access_token
 
     return {'access_token':new_access_token}, 200 # Return a 200 OK
-

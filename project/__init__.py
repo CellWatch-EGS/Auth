@@ -16,7 +16,7 @@ from flask_restx import Api, Resource
 def create_app():
 
     app = Flask(__name__)
-    api = Api(app, version='1.0', title='My API', description='A simple API')
+    # api = Api(app, version='1.0', title='My API', description='A simple API')
 
     app.config['JWT_TOKEN_LOCATION'] = ['cookies']
 
